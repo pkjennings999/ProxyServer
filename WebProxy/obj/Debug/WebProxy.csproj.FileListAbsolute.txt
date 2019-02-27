@@ -1,0 +1,10 @@
+E:\Documents\CompSci Yr 3\Telecoms\WebProxy\WebProxy\bin\Debug\WebProxy.exe.config
+E:\Documents\CompSci Yr 3\Telecoms\WebProxy\WebProxy\bin\Debug\WebProxy.exe
+E:\Documents\CompSci Yr 3\Telecoms\WebProxy\WebProxy\bin\Debug\WebProxy.pdb
+E:\Documents\CompSci Yr 3\Telecoms\WebProxy\WebProxy\obj\Debug\WebProxy.Properties.Resources.resources
+E:\Documents\CompSci Yr 3\Telecoms\WebProxy\WebProxy\obj\Debug\WebProxy.csproj.GenerateResource.cache
+E:\Documents\CompSci Yr 3\Telecoms\WebProxy\WebProxy\obj\Debug\WebProxy.csproj.CoreCompileInputs.cache
+E:\Documents\CompSci Yr 3\Telecoms\WebProxy\WebProxy\obj\Debug\WebProxy.exe
+E:\Documents\CompSci Yr 3\Telecoms\WebProxy\WebProxy\obj\Debug\WebProxy.pdb
+E:\Documents\CompSci Yr 3\Telecoms\WebProxy\WebProxy\obj\Debug\WebProxy.csprojAssemblyReference.cache
+E:\Documents\CompSci Yr 3\Telecoms\WebProxy\WebProxy\obj\Debug\WebProxy.ManagementConsole.resources
