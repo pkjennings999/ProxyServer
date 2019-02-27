@@ -133,10 +133,10 @@ namespace WebProxy
                 entryStream.ReadTimeout = 10000;
 
                 //Read the initial request from the entry point
-                string tempRead = null;
+                string tempRead = "";
                 while (entryStreamReader.Peek() != -1 && !entryStreamReader.EndOfStream)
                 {
-                    while (!(tempRead = entryStreamReader.ReadLine()).Equals(""))
+                    while (!entryStreamReader.EndOfStream && !(tempRead = entryStreamReader.ReadLine()).Equals(""))
                     {
                         data += tempRead;
                         data += "\r\n";
@@ -155,13 +155,7 @@ namespace WebProxy
                 //Used as a read counter
                 int i = 0;
                 //Check if the host is blocked on the proxy
-                if (!blockedHosts.Contains(host) &&
-                    !blockedHosts.Contains(Regex.Replace(host, "http://", "")) &&
-                    !blockedHosts.Contains(Regex.Replace(host, "https://", "")) &&
-                    !blockedHosts.Contains(Regex.Replace(host, "http://www.", "")) &&
-                    !blockedHosts.Contains(Regex.Replace(host, "https://www.", "")) &&
-                    !blockedHosts.Contains(Regex.Replace(host, "www.", "")) &&
-                    !blockedHosts.Contains(Regex.Replace(host, ":443", "")))
+                if (!blockedHosts.Contains(host))
                 {
                     switch (connectionType)
                     {
@@ -214,13 +208,22 @@ namespace WebProxy
 
                                     //Construct a new request, using the If-Modified-Since header.
                                     //This will return 304 Not Modified header if it has not been modified since the specified date, saving data
-                                    string firstLine = Regex.Match(data, ".*\r\n").Value;
-                                    string temp = Regex.Replace(firstLine, "\\?", @"\?");
-                                    temp = Regex.Replace(temp, "\\(", @"\(");
-                                    temp = Regex.Replace(temp, "\\)", @"\)");
-                                    string[] split = Regex.Split(data, temp);
-                                    string newRequest = firstLine + "If-Modified-Since: " + lastModified + "\r\n" + split[1];
-                                    exitStream.Write(Encoding.ASCII.GetBytes(newRequest), 0, Encoding.ASCII.GetBytes(newRequest).Length);
+                                    //string firstLine = Regex.Match(data, ".*\r\n").Value;
+
+                                    string[] split2 = Regex.Split(data, "\r\n");
+                                    string nreq = split2[0] + "\r\nIf-Modified-Since: " + lastModified + "\r\n";
+                                    for (int j = 1; j < split2.Length; j++)
+                                    {
+                                        nreq += split2[j] + "\r\n";
+                                    } 
+
+                                    //string temp = Regex.Replace(firstLine, "\\?", @"\?");
+                                    //temp = Regex.Replace(temp, "\\(", @"\(");
+                                    //temp = Regex.Replace(temp, "\\)", @"\)");
+                                    //string[] split = Regex.Split(data, temp);
+                                    //string newRequest = firstLine + "If-Modified-Since: " + lastModified + "\r\n" + split[1];
+                                    //bool sdf = newRequest.Equals(nreq);
+                                    exitStream.Write(Encoding.ASCII.GetBytes(nreq), 0, Encoding.ASCII.GetBytes(nreq).Length);
 
                                     bool firstRead = true;
                                     //Useful loop end condition. If the data has not been modified, we don't need to listen for more from the exit point client
@@ -433,7 +436,7 @@ namespace WebProxy
                 else
                 {
                     //If the URL is blocked, send this message instead and close the connections
-                    entryStreamWriter.WriteLine("HTTP/1.0 403 Forbidden\r\n\r\n<HTML><BODY><H1>no</H1></BODY></HTML>");
+                    entryStreamWriter.WriteLine("HTTP/1.0 403 Forbidden\r\n\r\n<HTML><BODY><H1>Access Denied</H1></BODY></HTML>");
                     entryStreamWriter.Flush();
 
                     entryStreamWriter.Close();
@@ -510,6 +513,10 @@ namespace WebProxy
         /// <param name="host">URL to be blocked</param>
         public static void BlockHost(string host)
         {
+            host = Regex.Replace(host, "http://", "");
+            host = Regex.Replace(host, "https://", "");
+            host = Regex.Replace(host, "www.", "");
+            host = Regex.Replace(host, ":443", "");
             blockedHosts.Add(host);
         }
     }
