@@ -208,22 +208,14 @@ namespace WebProxy
 
                                     //Construct a new request, using the If-Modified-Since header.
                                     //This will return 304 Not Modified header if it has not been modified since the specified date, saving data
-                                    //string firstLine = Regex.Match(data, ".*\r\n").Value;
-
-                                    string[] split2 = Regex.Split(data, "\r\n");
-                                    string nreq = split2[0] + "\r\nIf-Modified-Since: " + lastModified + "\r\n";
-                                    for (int j = 1; j < split2.Length; j++)
+                                    string[] split = Regex.Split(data, "\r\n");
+                                    string newRequest = split[0] + "\r\nIf-Modified-Since: " + lastModified + "\r\n";
+                                    for (int j = 1; j < split.Length; j++)
                                     {
-                                        nreq += split2[j] + "\r\n";
-                                    } 
+                                        newRequest += split[j] + "\r\n";
+                                    }
 
-                                    //string temp = Regex.Replace(firstLine, "\\?", @"\?");
-                                    //temp = Regex.Replace(temp, "\\(", @"\(");
-                                    //temp = Regex.Replace(temp, "\\)", @"\)");
-                                    //string[] split = Regex.Split(data, temp);
-                                    //string newRequest = firstLine + "If-Modified-Since: " + lastModified + "\r\n" + split[1];
-                                    //bool sdf = newRequest.Equals(nreq);
-                                    exitStream.Write(Encoding.ASCII.GetBytes(nreq), 0, Encoding.ASCII.GetBytes(nreq).Length);
+                                    exitStream.Write(Encoding.ASCII.GetBytes(newRequest), 0, Encoding.ASCII.GetBytes(newRequest).Length);
 
                                     bool firstRead = true;
                                     //Useful loop end condition. If the data has not been modified, we don't need to listen for more from the exit point client
